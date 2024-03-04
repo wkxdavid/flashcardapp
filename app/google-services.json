@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "519309894482",
+    "project_id": "memorymentor-a8502",
+    "storage_bucket": "memorymentor-a8502.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:519309894482:android:a7073b42eee6d631c1908b",
+        "android_client_info": {
+          "package_name": "edu.uw.ischool.scottng.memorymentor"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAe3U9Mvj-HpxRO8KVGH-hBb09LfM2dN5o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
