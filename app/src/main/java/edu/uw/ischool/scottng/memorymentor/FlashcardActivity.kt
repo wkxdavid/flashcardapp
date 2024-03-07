@@ -3,6 +3,7 @@ package edu.uw.ischool.scottng.memorymentor
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +25,10 @@ class FlashcardActivity : AppCompatActivity() {
         val toolbar: Toolbar = findViewById(R.id.toolbar_flashcards)
         toolbar.title = categoryName
         setSupportActionBar(toolbar)
+
+        val startButton: Button = findViewById(R.id.btn_start_flashcards)
+        startButton.setOnClickListener{
+        }
 
         val recyclerView : RecyclerView = findViewById(R.id.flashcard_recyclerView)
         val adaptor = FlashcardAdapter(flashcards)

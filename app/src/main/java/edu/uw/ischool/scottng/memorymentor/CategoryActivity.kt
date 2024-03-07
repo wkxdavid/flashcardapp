@@ -23,12 +23,12 @@ class CategoryActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         val recyclerView : RecyclerView = findViewById(R.id.recyclerView)
-        val adaptor = Adaptor(categoryNames)
+        val adaptor = CategoryAdapter(categoryNames)
         recyclerView.layoutManager = GridLayoutManager(this, 2)
         recyclerView.adapter = adaptor
 
         adaptor.setOnClickListener(object :
-            Adaptor.OnClickListener {
+            CategoryAdapter.OnClickListener {
             override fun onClick(position: Int, category: String) {
                 val intent = Intent(this@CategoryActivity, FlashcardActivity::class.java)
                 intent.putExtra("category", category)

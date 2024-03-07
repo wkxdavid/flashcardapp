@@ -1,9 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FlashcardDetailActivity">
+    android:padding="16dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Question Label -->
+    <TextView
+        android:id="@+id/text_question_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Question:"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- Question Text Area -->
+    <EditText
+        android:id="@+id/et_question"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_question_label"
+        android:hint="Enter your question"
+        android:inputType="textMultiLine"
+        android:gravity="start|top"
+        android:minLines="3"
+        android:maxLines="5"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Answer Label -->
+    <TextView
+        android:id="@+id/text_answer_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Answer:"
+        android:textStyle="bold"
+        android:layout_below="@id/et_question"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- Answer Text Area -->
+    <EditText
+        android:id="@+id/et_answer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_answer_label"
+        android:hint="Enter your answer"
+        android:inputType="textMultiLine"
+        android:gravity="start|top"
+        android:minLines="3"
+        android:maxLines="5"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Delete Button -->
+    <Button
+        android:id="@+id/button_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Save Button -->
+    <Button
+        android:id="@+id/button_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="16dp"/>
+
+</RelativeLayout>

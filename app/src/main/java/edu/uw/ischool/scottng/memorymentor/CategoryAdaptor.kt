@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class Adaptor(private val categories: List<String>) : RecyclerView.Adapter<Adaptor.ViewHolder>() {
+class CategoryAdapter(private val categories: List<String>) : RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
     private var onClickListener: OnClickListener? = null
 
     class ViewHolder(itemView:View) : RecyclerView.ViewHolder(itemView) {
