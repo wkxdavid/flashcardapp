@@ -31,6 +31,7 @@ class CategoryActivity : AppCompatActivity() {
             Adaptor.OnClickListener {
             override fun onClick(position: Int, category: String) {
                 val intent = Intent(this@CategoryActivity, FlashcardActivity::class.java)
+                intent.putExtra("category", category)
                 startActivity(intent)
             }
         })
