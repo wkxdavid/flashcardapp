@@ -1,18 +1,30 @@
 package edu.uw.ischool.scottng.memorymentor
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
-import com.google.firebase.Firebase
-import com.google.firebase.database.database
+import android.widget.CalendarView
+import androidx.appcompat.app.AppCompatActivity
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
+
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        val database = Firebase.database
-        val myRef = database.getReference("message")
-
-        myRef.setValue("Hello, World!")
+        val calendarView = findViewById<CalendarView>(R.id.calendarView)
+        calendarView.setOnDateChangeListener { view, year, month, dayOfMonth -> // Display the selected date
+            val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            val calendar = Calendar.getInstance()
+            calendar[year, month] = dayOfMonth
+            val selectedDate = sdf.format(calendar.time)
+            val intent = Intent(
+                this@MainActivity,
+                SelectedDateActivity::class.java
+            )
+            intent.putExtra("selectedDate", selectedDate)
+            startActivity(intent)
+        }
     }
 }
