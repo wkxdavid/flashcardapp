@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class FlashcardActivity : AppCompatActivity() {
     private lateinit var categories: List<Category>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_flashcard)
@@ -28,6 +29,8 @@ class FlashcardActivity : AppCompatActivity() {
 
         val startButton: Button = findViewById(R.id.btn_start_flashcards)
         startButton.setOnClickListener{
+            val intent = Intent(this, FlashcardQuizActivity::class.java)
+            startActivity(intent)
         }
 
         val recyclerView : RecyclerView = findViewById(R.id.flashcard_recyclerView)
