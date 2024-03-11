@@ -30,6 +30,7 @@ class FlashcardActivity : AppCompatActivity() {
         val startButton: Button = findViewById(R.id.btn_start_flashcards)
         startButton.setOnClickListener{
             val intent = Intent(this, FlashcardQuizActivity::class.java)
+            intent.putExtra("category", categoryName)
             startActivity(intent)
         }
 

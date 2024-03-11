@@ -1,23 +1,26 @@
 package edu.uw.ischool.scottng.memorymentor
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Button
-import com.google.firebase.Firebase
-import com.google.firebase.database.database
 import com.google.firebase.auth.FirebaseAuth
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var categoryBtn : Button
     private lateinit var auth: FirebaseAuth
+    private lateinit var sharedPreferences: SharedPreferences
+    private val PREF_EMAIL_KEY = "USER_EMAIL"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val database = Firebase.database
-        val myRef = database.getReference("message")
+        sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        val userEmail = intent.getStringExtra("user_email")
+        saveEmailToPreferences(userEmail)
 
         categoryBtn = findViewById(R.id.btn_to_category)
         categoryBtn.setOnClickListener {
@@ -43,5 +46,17 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, CalendarActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    // Save email to SharedPreferences
+    private fun saveEmailToPreferences(email: String?) {
+        val editor = sharedPreferences.edit()
+        editor.putString(PREF_EMAIL_KEY, email)
+        editor.apply()
+    }
+
+    // Retrieve email from SharedPreferences
+    private fun getEmailFromPreferences(): String {
+        return sharedPreferences.getString(PREF_EMAIL_KEY, "") ?: ""
     }
 }
