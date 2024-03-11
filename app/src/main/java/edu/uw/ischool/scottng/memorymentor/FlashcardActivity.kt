@@ -27,6 +27,15 @@ class FlashcardActivity : AppCompatActivity() {
         toolbar.title = categoryName
         setSupportActionBar(toolbar)
 
+        val addButton: Button = findViewById(R.id.btn_add_flashcards)
+        addButton.setOnClickListener{
+            val intent = Intent(this, FlashcardDetailActivity::class.java)
+            intent.putExtra("category", categoryName)
+            intent.putExtra("question", "")
+            intent.putExtra("answer", "")
+            startActivity(intent)
+        }
+
         val startButton: Button = findViewById(R.id.btn_start_flashcards)
         startButton.setOnClickListener{
             val intent = Intent(this, FlashcardQuizActivity::class.java)
@@ -43,6 +52,7 @@ class FlashcardActivity : AppCompatActivity() {
             FlashcardAdapter.OnClickListener {
             override fun onClick(position: Int, flashcard: Flashcard) {
                 val intent = Intent(this@FlashcardActivity, FlashcardDetailActivity::class.java)
+                intent.putExtra("category", categoryName)
                 intent.putExtra("question", flashcard.question)
                 intent.putExtra("answer", flashcard.answer)
                 startActivity(intent)

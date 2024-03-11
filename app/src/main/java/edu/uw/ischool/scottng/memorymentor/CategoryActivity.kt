@@ -7,10 +7,15 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Firebase
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.GenericTypeIndicator
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 
 class CategoryActivity : AppCompatActivity() {
@@ -24,32 +29,43 @@ class CategoryActivity : AppCompatActivity() {
 
         // get current user email
         val sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        val userEmail = sharedPreferences.getString("USER_EMAIL", "")
+        var userEmail = sharedPreferences.getString("USER_EMAIL", "")
 
         val database = Firebase.database
-        val categoryRef = database.getReference("Users/$userEmail/Categories")
+        val userRef = database.getReference("Users/$userEmail/")
+        val categoryRef = database.getReference("Users/$userEmail/Categories/")
 
         // get list of Category objects
-        categories = (application as FlashcardApp).categoryRepository.getCategories()
-        val categoryNames = categories.map { it.name }
+        var categoryNames = mutableListOf<String>()
+        userRef.child("Categories").addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                categoryNames.clear()
+                for (categorySnap in snapshot.children) {
+                    categorySnap.key?.let { categoryNames.add(it) }
+                }
+                val recyclerView : RecyclerView = findViewById(R.id.recyclerView)
+                val adaptor = CategoryAdapter(categoryNames)
+                recyclerView.layoutManager = GridLayoutManager(this@CategoryActivity, 2)
+                recyclerView.adapter = adaptor
+
+                adaptor.setOnClickListener(object :
+                    CategoryAdapter.OnClickListener {
+                    override fun onClick(position: Int, category: String) {
+                        val intent = Intent(this@CategoryActivity, FlashcardActivity::class.java)
+                        intent.putExtra("category", category)
+                        startActivity(intent)
+                    }
+                })
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.w("Error", "Failed to read value.", error.toException())
+            }
+        })
 
         // Set up the toolbar
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
-
-        val recyclerView : RecyclerView = findViewById(R.id.recyclerView)
-        val adaptor = CategoryAdapter(categoryNames)
-        recyclerView.layoutManager = GridLayoutManager(this, 2)
-        recyclerView.adapter = adaptor
-
-        adaptor.setOnClickListener(object :
-            CategoryAdapter.OnClickListener {
-            override fun onClick(position: Int, category: String) {
-                val intent = Intent(this@CategoryActivity, FlashcardActivity::class.java)
-                intent.putExtra("category", category)
-                startActivity(intent)
-            }
-        })
 
         addCategoryEt = findViewById(R.id.et_add_category)
         addCategoryBtn = findViewById(R.id.btn_add_category)
@@ -57,8 +73,9 @@ class CategoryActivity : AppCompatActivity() {
         addCategoryBtn.setOnClickListener{
             val categoryTitle = addCategoryEt.text.toString().trim()
             if(categoryTitle.isNotBlank()) {
-                val newCategoryRef = categoryRef.child(categoryTitle)
-                newCategoryRef.setValue("")
+                val newCategoryRef = categoryRef.child(categoryTitle).push()
+                newCategoryRef.setValue(Flashcard("Empty", "Empty"))
+                Toast.makeText(this, "$categoryTitle added!", Toast.LENGTH_SHORT).show()
             }
         }
     }

@@ -1,6 +1,16 @@
 package edu.uw.ischool.scottng.memorymentor
 
 import android.app.Application
+import android.nfc.Tag
+import android.util.Log
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.GenericTypeIndicator
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.database
 
 // Domain objects
 data class Category(
@@ -17,27 +27,31 @@ interface ICategoryRepository {
 }
 
 class CategoryRepository : ICategoryRepository {
-    private val allCategories: List<Category> = listOf(
-        Category(
-            "Mathematics",
-            listOf(
-                Flashcard("What is the value of pi (π)?", "3.14159"),
-                Flashcard("Solve for x: 2x + 5 = 15", "x = 5"))
-            ),
-        Category(
-            "Science",
-            listOf(Flashcard("What is the chemical symbol for water?", "3.14159"), Flashcard("Name the four fundamental forces in physics.", "Gravity, Electromagnetism, Weak Nuclear Force, Strong Nuclear Force")),
-        ),
-        Category(
-            "Programming",
-            listOf(
-                Flashcard("What does HTML stand for?", "Hypertext Markup Language"),
-                Flashcard("Name a popular programming language for machine learning.", "Python"))
-            )
-    )
+    private var userEmail = FirebaseAuth.getInstance().currentUser?.email ?: ""
 
     override fun getCategories(): List<Category> {
-        return allCategories
+        userEmail = userEmail.replace(".", "_")
+        var categories = mutableListOf<Category>()
+        val database = Firebase.database
+        val categoryRef = database.getReference("Users/$userEmail/Categories")
+
+        categoryRef.addValueEventListener(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (categorySnap in snapshot.children) {
+                    val title = categorySnap.key
+                    val flashcards = categorySnap.child("flashcards").getValue(object : GenericTypeIndicator<List<Flashcard>>() {})
+                    val category = title?.let { Category(it, flashcards ?: listOf(Flashcard("Empty", "Empty"))) }
+                    category?.let { categories.add(it)}
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.w("Erroe", "Failed to read value.", error.toException())
+            }
+
+        })
+
+        return categories;
     }
 }
 
@@ -47,5 +61,6 @@ class FlashcardApp : Application() {
     override fun onCreate() {
         super.onCreate()
         categoryRepository = CategoryRepository()
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
     }
 }
