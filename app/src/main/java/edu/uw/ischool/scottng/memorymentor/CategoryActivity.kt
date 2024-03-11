@@ -43,6 +43,7 @@ class CategoryActivity : AppCompatActivity() {
                 for (categorySnap in snapshot.children) {
                     categorySnap.key?.let { categoryNames.add(it) }
                 }
+                // set recycler view
                 val recyclerView : RecyclerView = findViewById(R.id.recyclerView)
                 val adaptor = CategoryAdapter(categoryNames)
                 recyclerView.layoutManager = GridLayoutManager(this@CategoryActivity, 2)
