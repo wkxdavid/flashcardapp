@@ -5,11 +5,14 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
-import android.widget.TextView
 import android.widget.ImageView
+import android.widget.TextView
+import android.app.Activity
+import android.net.Uri
 
 class ProfileActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
+    private val IMAGE_PICK_CODE = 1000
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,20 +22,33 @@ class ProfileActivity : AppCompatActivity() {
 
         val usernameTextView: TextView = findViewById(R.id.usernameTextView)
         val profileIcon: ImageView = findViewById(R.id.profileIcon)
+        profileIcon.setOnClickListener {
+            // Intent to pick an image
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            startActivityForResult(intent, IMAGE_PICK_CODE)
+        }
 
         val user = auth.currentUser
-
         user?.let {
             val userName = it.email ?: "No Name"
             usernameTextView.text = userName
-            profileIcon.setImageResource(R.mipmap.ic_launcher_round)
         }
 
         findViewById<Button>(R.id.logoutButton).setOnClickListener {
             auth.signOut()
-            startActivity(Intent(this, LoginActivity::class.java))
-            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
             finish()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == IMAGE_PICK_CODE && resultCode == Activity.RESULT_OK) {
+            val imageData: Uri? = data?.data
+            val profileIcon: ImageView = findViewById(R.id.profileIcon)
+            profileIcon.setImageURI(imageData)
         }
     }
 }
