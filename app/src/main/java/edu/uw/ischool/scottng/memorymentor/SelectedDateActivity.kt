@@ -27,11 +27,6 @@ class SelectedDateActivity : AppCompatActivity() {
         val selectedDate = intent.getStringExtra("selectedDate")
         dateTextView.text = selectedDate
 
-        val parts = selectedDate!!.split("-").map { it.toInt() }
-        Log.d("Date", parts[0].toString())
-        Log.d("Date", parts[1].toString())
-        Log.d("Date", parts[2].toString())
-
         scheduleButton.setOnClickListener {
             val note = noteEditText.text.toString().trim()
             if (note.isEmpty()) {
@@ -44,11 +39,11 @@ class SelectedDateActivity : AppCompatActivity() {
 
     private fun scheduleNotifications(note: String, selectedDate: String) {
         val dates = calculateNotificationTimes(selectedDate)
+        Toast.makeText(this, "Notifications scheduled for $note", Toast.LENGTH_LONG).show()
         dates.forEach { date ->
             scheduleNotification(date, note)
         }
         // Show a Toast message for testing purposes
-        Toast.makeText(this, "Notifications scheduled for $note", Toast.LENGTH_LONG).show()
     }
 
     private fun canScheduleExactAlarms(): Boolean {
@@ -83,9 +78,9 @@ class SelectedDateActivity : AppCompatActivity() {
     }
 
     private fun calculateNotificationTimes(selectedDate: String): List<Long> {
-        val parts = selectedDate.split("-").map { it.toInt() }
+        val parts = selectedDate.split("/").map { it.toInt() }
         val calendar = Calendar.getInstance().apply {
-            set(parts[1] - 1, parts[0], parts[2]) // Note: Month is 0-based
+            set(parts[2], parts[1], parts[0]) // Note: Month is 0-based
         }
 
         return listOf(
