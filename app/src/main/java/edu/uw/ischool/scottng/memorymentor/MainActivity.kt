@@ -6,8 +6,6 @@ import android.widget.Button
 import android.content.Intent
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
-import android.content.Intent
-import android.widget.Button
 import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
@@ -21,13 +19,11 @@ class MainActivity : AppCompatActivity() {
         val database = Firebase.database
         val myRef = database.getReference("message")
 
-        myRef.setValue("Hello, World!")
-
         categoryBtn = findViewById(R.id.btn_to_category)
         categoryBtn.setOnClickListener {
             val intent = Intent(this, CategoryActivity::class.java)
             startActivity(intent)
-        myRef.setValue("Hello, World TEST!")
+        }
 
         auth = FirebaseAuth.getInstance()
 
