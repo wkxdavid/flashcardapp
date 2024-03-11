@@ -45,7 +45,9 @@ class LoginActivity : AppCompatActivity() {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
+                    val userEmail = email.replace(".", "_")
                     val intent = Intent(this, MainActivity::class.java)
+                    intent.putExtra("user_email", userEmail)
                     startActivity(intent)
                     finish()
                 } else {

@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.widget.Button
 import com.google.firebase.auth.FirebaseAuth
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.database.DatabaseReference
 
 class MainActivity : AppCompatActivity() {
     private lateinit var categoryBtn : Button
@@ -17,6 +18,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
 
         sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
         val userEmail = intent.getStringExtra("user_email")
