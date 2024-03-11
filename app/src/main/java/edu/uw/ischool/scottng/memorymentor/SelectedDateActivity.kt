@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -26,6 +27,11 @@ class SelectedDateActivity : AppCompatActivity() {
         val selectedDate = intent.getStringExtra("selectedDate")
         dateTextView.text = selectedDate
 
+        val parts = selectedDate!!.split("-").map { it.toInt() }
+        Log.d("Date", parts[0].toString())
+        Log.d("Date", parts[1].toString())
+        Log.d("Date", parts[2].toString())
+
         scheduleButton.setOnClickListener {
             val note = noteEditText.text.toString().trim()
             if (note.isEmpty()) {
@@ -37,17 +43,12 @@ class SelectedDateActivity : AppCompatActivity() {
     }
 
     private fun scheduleNotifications(note: String, selectedDate: String) {
-        if (canScheduleExactAlarms()) {
-            val dates = calculateNotificationTimes(selectedDate)
-            dates.forEach { date ->
-                scheduleNotification(date, note)
-            }
-            // Show a Toast message for testing purposes
-            Toast.makeText(this, "Notifications scheduled for $note", Toast.LENGTH_LONG).show()
-        } else {
-            Toast.makeText(this, "App does not have permission to schedule exact alarms.", Toast.LENGTH_LONG).show()
-            // Consider directing the user to the app's settings page.
+        val dates = calculateNotificationTimes(selectedDate)
+        dates.forEach { date ->
+            scheduleNotification(date, note)
         }
+        // Show a Toast message for testing purposes
+        Toast.makeText(this, "Notifications scheduled for $note", Toast.LENGTH_LONG).show()
     }
 
     private fun canScheduleExactAlarms(): Boolean {
@@ -84,7 +85,7 @@ class SelectedDateActivity : AppCompatActivity() {
     private fun calculateNotificationTimes(selectedDate: String): List<Long> {
         val parts = selectedDate.split("-").map { it.toInt() }
         val calendar = Calendar.getInstance().apply {
-            set(parts[0], parts[1] - 1, parts[2]) // Note: Month is 0-based
+            set(parts[1] - 1, parts[0], parts[2]) // Note: Month is 0-based
         }
 
         return listOf(
