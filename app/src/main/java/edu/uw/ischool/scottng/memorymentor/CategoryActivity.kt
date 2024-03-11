@@ -73,10 +73,12 @@ class CategoryActivity : AppCompatActivity() {
 
         addCategoryBtn.setOnClickListener{
             val categoryTitle = addCategoryEt.text.toString().trim()
-            if(categoryTitle.isNotBlank()) {
+            if (categoryTitle.isNotBlank()) {
                 val newCategoryRef = categoryRef.child(categoryTitle).push()
-                newCategoryRef.setValue(Flashcard("Empty", "Empty"))
-                Toast.makeText(this, "$categoryTitle added!", Toast.LENGTH_SHORT).show()
+                val newCategoryKey = newCategoryRef.key ?: "Empty"
+
+                val flashcard = Flashcard("Empty", "Empty", newCategoryKey)
+                newCategoryRef.setValue(flashcard)
             }
         }
     }

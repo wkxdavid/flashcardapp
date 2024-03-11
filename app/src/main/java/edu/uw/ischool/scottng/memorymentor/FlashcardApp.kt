@@ -18,7 +18,7 @@ data class Category(
     val flashcards: List<Flashcard>
 )
 
-data class Flashcard(val question: String, val answer: String)
+data class Flashcard(val question: String, val answer: String, val key: String)
 
 
 // Repository
@@ -40,7 +40,7 @@ class CategoryRepository : ICategoryRepository {
                 for (categorySnap in snapshot.children) {
                     val title = categorySnap.key
                     val flashcards = categorySnap.child("flashcards").getValue(object : GenericTypeIndicator<List<Flashcard>>() {})
-                    val category = title?.let { Category(it, flashcards ?: listOf(Flashcard("Empty", "Empty"))) }
+                    val category = title?.let { Category(it, flashcards ?: listOf(Flashcard("Empty", "Empty", "Empty"))) }
                     category?.let { categories.add(it)}
                 }
             }
