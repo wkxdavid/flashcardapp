@@ -19,25 +19,25 @@ class LoginActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 
-        val buttonLogin: Button = findViewById(R.id.buttonLogin)
-        val editTextEmail: EditText = findViewById(R.id.editTextLoginEmail)
-        val editTextPassword: EditText = findViewById(R.id.editTextLoginPassword)
-        val textViewGoToRegister: TextView = findViewById(R.id.textViewGoToRegister)
+        val loginButton: Button = findViewById(R.id.loginButton)
+        val emailEditText: EditText = findViewById(R.id.emailEditText)
+        val passwordEditText: EditText = findViewById(R.id.passwordEditText)
+        val registerTextView: TextView = findViewById(R.id.registerTextView)
 
-        buttonLogin.setOnClickListener {
-            val email = editTextEmail.text.toString().trim()
-            val password = editTextPassword.text.toString().trim()
+        loginButton.setOnClickListener {
+            val email = emailEditText.text.toString().trim()
+            val password = passwordEditText.text.toString().trim()
 
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 loginUser(email, password)
             } else {
-                Toast.makeText(this, "Email and password cannot be empty.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Please enter both email and password", Toast.LENGTH_SHORT).show()
             }
         }
 
-        textViewGoToRegister.setOnClickListener {
-            val intent = Intent(this, RegisterActivity::class.java)
-            startActivity(intent)
+        registerTextView.setOnClickListener {
+            // Navigate to RegisterActivity
+            startActivity(Intent(this, RegisterActivity::class.java))
         }
     }
 
@@ -45,12 +45,22 @@ class LoginActivity : AppCompatActivity() {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    val intent = Intent(this, MainActivity::class.java)
+                    val intent = Intent(this, UserProfileActivity::class.java)
                     startActivity(intent)
                     finish()
                 } else {
-                    Toast.makeText(baseContext, "Login failed.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(baseContext, "Authentication failed.", Toast.LENGTH_SHORT).show()
                 }
             }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val currentUser = auth.currentUser
+        if(currentUser != null){
+            val intent = Intent(this, UserProfileActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 }
