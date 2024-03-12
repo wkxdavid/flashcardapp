@@ -32,6 +32,7 @@ class SelectedDateActivity : AppCompatActivity() {
             } else {
                 if (canScheduleExactAlarms() || Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
                     scheduleNotifications(note, selectedDate ?: "")
+                    Toast.makeText(this, "$note scheduled on $selectedDate", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this, "App does not have permission to schedule exact alarms.", Toast.LENGTH_LONG).show()
                 }
