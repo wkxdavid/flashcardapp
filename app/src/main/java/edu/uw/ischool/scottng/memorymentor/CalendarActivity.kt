@@ -27,5 +27,26 @@ class CalendarActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // Set up the BottomNavigationView
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.btn_to_category -> {
+                    val intent = Intent(this, CategoryActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                R.id.calendarButton -> {
+                    true
+                }
+                R.id.profile -> {
+                    // Start the profile activity, change ProfileActivity::class.java to your actual profile activity
+                    val intent = Intent(this, ProfileActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                else -> false
+            }
+        }
     }
 }

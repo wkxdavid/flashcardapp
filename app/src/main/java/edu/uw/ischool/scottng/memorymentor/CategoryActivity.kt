@@ -20,14 +20,10 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 
 class CategoryActivity : AppCompatActivity() {
-    private lateinit var homeBtn : Button
-    private lateinit var calendarBtn : Button
-    private lateinit var profileBtn : Button
     private lateinit var addCategoryEt: EditText
     private lateinit var addCategoryBtn: Button
     private lateinit var auth: FirebaseAuth
     private lateinit var sharedPreferences: SharedPreferences
-    private val PREF_EMAIL_KEY = "USER_EMAIL"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,8 +37,7 @@ class CategoryActivity : AppCompatActivity() {
 
         // get current user email
         sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
-        val userEmail = intent.getStringExtra("user_email")
-        saveEmailToPreferences(userEmail)
+        val userEmail = sharedPreferences.getString("USER_EMAIL", "")
 
         val database = Firebase.database
         val userRef = database.getReference("Users/$userEmail/")
@@ -118,12 +113,4 @@ class CategoryActivity : AppCompatActivity() {
             }
         }
     }
-
-    // Save email to SharedPreferences
-    private fun saveEmailToPreferences(email: String?) {
-        val editor = sharedPreferences.edit()
-        editor.putString(PREF_EMAIL_KEY, email)
-        editor.apply()
-    }
-
 }
