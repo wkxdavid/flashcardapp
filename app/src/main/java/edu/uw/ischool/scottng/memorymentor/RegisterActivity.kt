@@ -52,6 +52,6 @@ class RegisterActivity : AppCompatActivity() {
     private fun addUserToDb(email: String) {
         val userEmail = email.replace(".", "_")
         val usersRef = database.getReference("Users/$userEmail")
-        usersRef.setValue("Categories");
+        usersRef.setValue("Categories")
     }
 }

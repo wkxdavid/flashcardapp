@@ -37,7 +37,7 @@ class FlashcardQuizActivity : AppCompatActivity() {
 
         flashcardsRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                flashcards = mutableListOf<Flashcard>()
+                flashcards = mutableListOf()
                 for (flashcardSnap in snapshot.children) {
                     val flashcardKey = flashcardSnap.key ?: "Empty"
                     var answer = ""
@@ -54,7 +54,7 @@ class FlashcardQuizActivity : AppCompatActivity() {
                     val flashcard = Flashcard(question, answer, flashcardKey)
                     flashcards.add(flashcard)
 
-                    if (!flashcards.isNullOrEmpty()) {
+                    if (flashcards.isNotEmpty()) {
                         displayQuestion(currentQuestionIndex, flashcards, questionText)
                     }
                 }

@@ -16,7 +16,7 @@ class CalendarActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calendar)
         calendarView = findViewById(R.id.calendarView)
-        calendarView.setOnDateChangeListener { view, year, month, dayOfMonth -> // Display the selected date
+        calendarView.setOnDateChangeListener { _, year, month, dayOfMonth -> // Display the selected date
             val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
             val calendar = Calendar.getInstance()
             calendar[year, month] = dayOfMonth

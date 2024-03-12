@@ -38,7 +38,7 @@ class CategoryActivity : AppCompatActivity() {
         }
 
         // Get current user email
-        sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         val userEmail = sharedPreferences.getString("USER_EMAIL", "")
 
         // Set up the toolbar
