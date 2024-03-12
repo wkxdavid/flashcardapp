@@ -8,10 +8,10 @@
 
     <TextView
         android:id="@+id/txt_question"
-        android:layout_width="350dp"
-        android:layout_height="225dp"
+        android:layout_width="375dp"
+        android:layout_height="300dp"
         android:layout_marginBottom="60dp"
-        android:background="#673AB7"
+        android:background="?attr/colorPrimary"
         android:gravity="center"
         android:padding="16dp"
         android:textColor="@color/white"
