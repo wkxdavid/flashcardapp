@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.CalendarView
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -25,5 +26,6 @@ class CalendarActivity : AppCompatActivity() {
             intent.putExtra("selectedDate", selectedDate)
             startActivity(intent)
         }
+
     }
 }

@@ -8,15 +8,14 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.GenericTypeIndicator
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 
@@ -34,17 +33,16 @@ class CategoryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_category)
 
-        // get current user email
-        sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
-        val userEmail = intent.getStringExtra("user_email")
-        saveEmailToPreferences(userEmail)
-
         auth = FirebaseAuth.getInstance()
-
         if (auth.currentUser == null) {
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
+
+        // get current user email
+        sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        val userEmail = intent.getStringExtra("user_email")
+        saveEmailToPreferences(userEmail)
 
         val database = Firebase.database
         val userRef = database.getReference("Users/$userEmail/")
@@ -96,7 +94,29 @@ class CategoryActivity : AppCompatActivity() {
                 newCategoryRef.setValue(flashcard)
             }
         }
-        
+
+        // Set up the BottomNavigationView
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.btn_to_category -> {
+                    // If we're already on MainActivity, we don't need to do anything
+                    true
+                }
+                R.id.calendarButton -> {
+                    val intent = Intent(this, CalendarActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                R.id.profile -> {
+                    // Start the profile activity, change ProfileActivity::class.java to your actual profile activity
+                    val intent = Intent(this, ProfileActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                else -> false
+            }
+        }
     }
 
     // Save email to SharedPreferences
