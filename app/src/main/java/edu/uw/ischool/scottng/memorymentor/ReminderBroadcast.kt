@@ -13,30 +13,27 @@ class ReminderBroadcast : BroadcastReceiver() {
         val note = intent?.getStringExtra("note") ?: "Time to study!"
         val notificationManager = context?.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
 
-        val channelExists = notificationManager?.getNotificationChannel(CHANNEL_ID) != null
-        if (!channelExists) {
-            val channel = NotificationChannel(
-                CHANNEL_ID,
-                "Study Reminder",
-                NotificationManager.IMPORTANCE_DEFAULT
-            ).apply {
-                description = "Channel for study reminder"
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (notificationManager?.getNotificationChannel(CHANNEL_ID) == null) {
+                val importance = NotificationManager.IMPORTANCE_DEFAULT
+                val channel = NotificationChannel(CHANNEL_ID, "Study Reminder", importance).apply {
+                    description = "Channel for study reminder"
+                }
+                notificationManager?.createNotificationChannel(channel)
             }
-            notificationManager?.createNotificationChannel(channel)
         }
 
-        val notification = NotificationCompat.Builder(context!!, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_notification) // Ensure this icon exists in your drawable folder
+        val notificationBuilder = NotificationCompat.Builder(context!!, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle("Study Reminder")
             .setContentText(note)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .build()
 
-        notificationManager?.notify(NOTIFICATION_ID, notification)
+        val notificationId = System.currentTimeMillis().toInt() // Generates a unique ID for each notification
+        notificationManager?.notify(notificationId, notificationBuilder.build())
     }
 
     companion object {
         const val CHANNEL_ID = "study_reminder_channel"
-        const val NOTIFICATION_ID = 1
     }
 }

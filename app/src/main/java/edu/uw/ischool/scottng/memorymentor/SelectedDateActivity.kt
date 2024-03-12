@@ -32,7 +32,12 @@ class SelectedDateActivity : AppCompatActivity() {
             if (note.isEmpty()) {
                 Toast.makeText(this, "Enter Exam Name", Toast.LENGTH_SHORT).show()
             } else {
-                scheduleNotifications(note, selectedDate ?: "")
+                if (canScheduleExactAlarms() || Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+                    scheduleNotifications(note, selectedDate ?: "")
+                } else {
+                    // Handle lack of permission here (e.g., show a dialog directing users to system settings)
+                    Toast.makeText(this, "App does not have permission to schedule exact alarms.", Toast.LENGTH_LONG).show()
+                }
             }
         }
     }
@@ -43,7 +48,6 @@ class SelectedDateActivity : AppCompatActivity() {
         dates.forEach { date ->
             scheduleNotification(date, note)
         }
-        // Show a Toast message for testing purposes
     }
 
     private fun canScheduleExactAlarms(): Boolean {
@@ -51,8 +55,7 @@ class SelectedDateActivity : AppCompatActivity() {
             val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
             alarmManager.canScheduleExactAlarms()
         } else {
-            // Permission is automatically granted on controllers older than Android S.
-            true
+            true // Permission is automatically granted on controllers older than Android S.
         }
     }
 
@@ -80,7 +83,7 @@ class SelectedDateActivity : AppCompatActivity() {
     private fun calculateNotificationTimes(selectedDate: String): List<Long> {
         val parts = selectedDate.split("/").map { it.toInt() }
         val calendar = Calendar.getInstance().apply {
-            set(parts[2], parts[1], parts[0]) // Note: Month is 0-based
+            set(parts[2], parts[0] - 1, parts[1], 8, 0) // Assuming format is YYYY/MM/DD and setting for 8 AM
         }
 
         return listOf(
