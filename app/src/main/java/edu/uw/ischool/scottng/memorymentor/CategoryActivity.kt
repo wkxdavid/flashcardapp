@@ -2,6 +2,7 @@ package edu.uw.ischool.scottng.memorymentor
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -12,6 +13,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.GenericTypeIndicator
@@ -19,17 +21,30 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 
 class CategoryActivity : AppCompatActivity() {
-    private lateinit var categories: List<Category>
+    private lateinit var homeBtn : Button
+    private lateinit var calendarBtn : Button
+    private lateinit var profileBtn : Button
     private lateinit var addCategoryEt: EditText
     private lateinit var addCategoryBtn: Button
+    private lateinit var auth: FirebaseAuth
+    private lateinit var sharedPreferences: SharedPreferences
+    private val PREF_EMAIL_KEY = "USER_EMAIL"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_category)
 
         // get current user email
-        val sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        var userEmail = sharedPreferences.getString("USER_EMAIL", "")
+        sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        val userEmail = intent.getStringExtra("user_email")
+        saveEmailToPreferences(userEmail)
+
+        auth = FirebaseAuth.getInstance()
+
+        if (auth.currentUser == null) {
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+        }
 
         val database = Firebase.database
         val userRef = database.getReference("Users/$userEmail/")
@@ -81,5 +96,14 @@ class CategoryActivity : AppCompatActivity() {
                 newCategoryRef.setValue(flashcard)
             }
         }
+        
     }
+
+    // Save email to SharedPreferences
+    private fun saveEmailToPreferences(email: String?) {
+        val editor = sharedPreferences.edit()
+        editor.putString(PREF_EMAIL_KEY, email)
+        editor.apply()
+    }
+
 }

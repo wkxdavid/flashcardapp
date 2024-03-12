@@ -46,7 +46,7 @@ class LoginActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     val userEmail = email.replace(".", "_")
-                    val intent = Intent(this, MainActivity::class.java)
+                    val intent = Intent(this, CategoryActivity::class.java)
                     intent.putExtra("user_email", userEmail)
                     startActivity(intent)
                     finish()
