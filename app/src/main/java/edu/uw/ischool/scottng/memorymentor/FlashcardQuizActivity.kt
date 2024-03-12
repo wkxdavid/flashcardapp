@@ -30,6 +30,9 @@ class FlashcardQuizActivity : AppCompatActivity() {
         val userEmail = sharedPreferences.getString("USER_EMAIL", "")
         val flashcardsRef = FirebaseDatabase.getInstance().getReference("Users/$userEmail/Categories/$category")
 
+        backButton = findViewById(R.id.btn_back_flashcard)
+        nextButton = findViewById(R.id.btn_next_flashcard)
+
         flashcardsRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 flashcards = mutableListOf<Flashcard>()
@@ -53,6 +56,9 @@ class FlashcardQuizActivity : AppCompatActivity() {
                         displayQuestion(currentQuestionIndex, flashcards, questionText)
                     }
                 }
+                if(flashcards.size == 1) {
+                    nextButton.text = "Finish"
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -66,11 +72,8 @@ class FlashcardQuizActivity : AppCompatActivity() {
             displayQuestion(currentQuestionIndex, flashcards, questionText)
         }
 
-        backButton = findViewById(R.id.btn_back_flashcard)
-        nextButton = findViewById(R.id.btn_next_flashcard)
-
         backButton.setOnClickListener {
-            if(currentQuestionIndex === 0) {
+            if (currentQuestionIndex == 0) {
                 val intent = Intent(this, FlashcardActivity::class.java)
                 intent.putExtra("category", category)
                 startActivity(intent)
@@ -79,10 +82,12 @@ class FlashcardQuizActivity : AppCompatActivity() {
                 displayingQuestion = true
                 displayQuestion(currentQuestionIndex, flashcards, questionText)
             }
+            updateButtonText(currentQuestionIndex, flashcards.size)
         }
 
         nextButton.setOnClickListener {
-            if(currentQuestionIndex === flashcards.size - 1) {
+            if (currentQuestionIndex == flashcards.size - 1) {
+                nextButton.text = "Finish"
                 val intent = Intent(this, FlashcardActivity::class.java)
                 intent.putExtra("category", category)
                 startActivity(intent)
@@ -91,6 +96,7 @@ class FlashcardQuizActivity : AppCompatActivity() {
                 displayingQuestion = true
                 displayQuestion(currentQuestionIndex, flashcards, questionText)
             }
+            updateButtonText(currentQuestionIndex, flashcards.size)
         }
     }
 
@@ -101,5 +107,10 @@ class FlashcardQuizActivity : AppCompatActivity() {
         } else {
             questionText.text = flashcards[currentQuestionIndex].answer
         }
+    }
+
+    private fun updateButtonText(currIndex: Int, size: Int) {
+        backButton.text = if(currIndex == 0) "Leave" else "Back"
+        nextButton.text = if (currIndex == size - 1) "Finish" else "Next"
     }
 }

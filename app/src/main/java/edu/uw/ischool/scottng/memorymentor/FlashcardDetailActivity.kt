@@ -38,8 +38,8 @@ class FlashcardDetailActivity : AppCompatActivity() {
 
         saveButton = findViewById(R.id.btn_save)
         saveButton.setOnClickListener {
-            val updatedQuest = questionHolder.text.toString()
-            val updatedAns = answerHolder.text.toString()
+            val updatedQuest = questionHolder.text.toString().trim()
+            val updatedAns = answerHolder.text.toString().trim()
             flashcardRef.setValue(Flashcard(updatedQuest, updatedAns, key))
             val intent = Intent(this, FlashcardActivity::class.java)
             intent.putExtra("category", category)
