@@ -93,6 +93,7 @@ class FlashcardQuizActivity : AppCompatActivity() {
                 val intent = Intent(this, FlashcardActivity::class.java)
                 intent.putExtra("category", category)
                 startActivity(intent)
+                finish()
             } else {
                 currentQuestionIndex++
                 displayingQuestion = true
