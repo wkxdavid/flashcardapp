@@ -11,6 +11,7 @@ import androidx.core.app.NotificationCompat
 class ReminderBroadcast : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         val note = intent?.getStringExtra("note") ?: "Time to study!"
+
         val notificationManager = context?.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -23,14 +24,15 @@ class ReminderBroadcast : BroadcastReceiver() {
             }
         }
 
-        val notificationBuilder = NotificationCompat.Builder(context!!, CHANNEL_ID)
+        val notification = NotificationCompat.Builder(context!!, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle("Study Reminder")
             .setContentText(note)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .build()
 
-        val notificationId = System.currentTimeMillis().toInt() // Generates a unique ID for each notification
-        notificationManager?.notify(notificationId, notificationBuilder.build())
+        val notificationId = System.currentTimeMillis().toInt() // Unique ID for each notification
+        notificationManager?.notify(notificationId, notification)
     }
 
     companion object {
