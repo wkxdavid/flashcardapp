@@ -59,7 +59,7 @@ class SelectedDateActivity : AppCompatActivity() {
             it.putExtra("note", note)
         }
 
-        val requestCode = (time and 0xfffffff).toInt()
+        val requestCode = (time xor System.currentTimeMillis()).toInt()
         val pendingIntent = PendingIntent.getBroadcast(applicationContext, requestCode, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -67,17 +67,26 @@ class SelectedDateActivity : AppCompatActivity() {
     }
 
     private fun calculateNotificationTimes(selectedDate: String): List<Long> {
-        // Assuming the selectedDate format is "yyyy/MM/dd"
         val parts = selectedDate.split("/").map { it.toInt() }
         val calendar = Calendar.getInstance().apply {
-            set(parts[0], parts[1] - 1, parts[2], 22, 3) // Setting for 10:03 PM on the selected date
+            set(parts[0], parts[1] - 1, parts[2], 22, 3, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
         }
 
-        return listOf(
-            calendar.timeInMillis, // The day of the event
-            calendar.apply { add(Calendar.DAY_OF_MONTH, -1) }.timeInMillis, // One day before
-            calendar.apply { add(Calendar.DAY_OF_MONTH, -3) }.timeInMillis // Three days before
-        )
-    }
+        val notifications = mutableListOf<Long>()
 
+        // The day of the event
+        notifications.add(calendar.timeInMillis)
+
+        // One day before
+        calendar.add(Calendar.DATE, -1)
+        notifications.add(calendar.timeInMillis)
+
+        // Three days before
+        calendar.add(Calendar.DATE, -2) // -2 because we already moved it -1 day
+        notifications.add(calendar.timeInMillis)
+
+        return notifications
+    }
 }

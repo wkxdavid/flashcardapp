@@ -2,6 +2,7 @@ package edu.uw.ischool.scottng.memorymentor
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -16,6 +17,7 @@ class FlashcardQuizActivity : AppCompatActivity() {
     private lateinit var backButton: Button
     private lateinit var nextButton: Button
     private lateinit var questionText: TextView
+    private lateinit var sharedPreferences: SharedPreferences
     private lateinit var flashcards: MutableList<Flashcard>
     private var displayingQuestion = true
     private var currentQuestionIndex = 0
@@ -26,7 +28,7 @@ class FlashcardQuizActivity : AppCompatActivity() {
 
         val category = intent.getStringExtra("category")
 
-        val sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         val userEmail = sharedPreferences.getString("USER_EMAIL", "")
         val flashcardsRef = FirebaseDatabase.getInstance().getReference("Users/$userEmail/Categories/$category")
 

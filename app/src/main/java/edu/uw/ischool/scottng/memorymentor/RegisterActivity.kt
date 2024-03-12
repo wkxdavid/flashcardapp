@@ -12,10 +12,8 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.database
 
 class RegisterActivity : AppCompatActivity() {
-
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseDatabase
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,8 +38,9 @@ class RegisterActivity : AppCompatActivity() {
                         if (task.isSuccessful) {
                             addUserToDb(email)
                             Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show()
-                            val intent = Intent(this, CategoryActivity::class.java)
+                            val intent = Intent(this, LoginActivity::class.java)
                             startActivity(intent)
+                            finish()
                         } else {
                             Toast.makeText(this, "Registration failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                         }

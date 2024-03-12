@@ -2,6 +2,7 @@ package edu.uw.ischool.scottng.memorymentor
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -13,22 +14,28 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 
 class FlashcardActivity : AppCompatActivity() {
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var database: FirebaseDatabase
+    private lateinit var addFlashcardButton: Button
+    private lateinit var deleteFlashcardButton: Button
+    private lateinit var startQuizButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_flashcard)
 
         // get current user email
-        val sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         val userEmail = sharedPreferences.getString("USER_EMAIL", "")
 
-        // get flashcards from a given category name (change to firebase fetch later)
+        // get flashcards from a given category name
         val category = intent.getStringExtra("category")
-        val database = Firebase.database
+        database = Firebase.database
         val flashcardsRef = database.getReference("Users/$userEmail/Categories/$category")
 
         val flashcards = mutableListOf<Flashcard>()
@@ -74,15 +81,13 @@ class FlashcardActivity : AppCompatActivity() {
             }
         })
 
-
-
         // Set up the toolbar
         val toolbar: Toolbar = findViewById(R.id.toolbar_flashcards)
         toolbar.title = category
         setSupportActionBar(toolbar)
 
-        val addButton: Button = findViewById(R.id.btn_add_flashcards)
-        addButton.setOnClickListener{
+        addFlashcardButton = findViewById(R.id.btn_add_flashcards)
+        addFlashcardButton.setOnClickListener{
             val newFlashcardRef = flashcardsRef.child("").push()
             val newFlashcardKey = newFlashcardRef.key ?: "Empty"
             val intent = Intent(this, FlashcardDetailActivity::class.java)
@@ -93,16 +98,16 @@ class FlashcardActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        val deleteButton: Button = findViewById(R.id.btn_delete_flashcards)
-        deleteButton.setOnClickListener{
+        deleteFlashcardButton = findViewById(R.id.btn_delete_flashcards)
+        deleteFlashcardButton.setOnClickListener{
             flashcardsRef.removeValue()
             val intent = Intent(this, CategoryActivity::class.java)
             intent.putExtra("category", category)
             startActivity(intent)
         }
 
-        val startButton: Button = findViewById(R.id.btn_start_flashcards)
-        startButton.setOnClickListener{
+        startQuizButton = findViewById(R.id.btn_start_flashcards)
+        startQuizButton.setOnClickListener{
             val intent = Intent(this, FlashcardQuizActivity::class.java)
             intent.putExtra("category", category)
             startActivity(intent)

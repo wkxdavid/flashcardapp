@@ -10,10 +10,12 @@ import java.util.Calendar
 import java.util.Locale
 
 class CalendarActivity : AppCompatActivity() {
+    private lateinit var calendarView: CalendarView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calendar)
-        val calendarView = findViewById<CalendarView>(R.id.calendarView)
+        calendarView = findViewById(R.id.calendarView)
         calendarView.setOnDateChangeListener { view, year, month, dayOfMonth -> // Display the selected date
             val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
             val calendar = Calendar.getInstance()

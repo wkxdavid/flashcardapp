@@ -2,6 +2,7 @@ package edu.uw.ischool.scottng.memorymentor
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -9,12 +10,16 @@ import android.widget.EditText
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.Firebase
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.database
 
 class FlashcardDetailActivity : AppCompatActivity() {
     private lateinit var saveButton : Button
     private lateinit var deleteButton : Button
     private lateinit var flashcardRef : DatabaseReference
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var database: FirebaseDatabase
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_flashcard_detail)
@@ -24,10 +29,11 @@ class FlashcardDetailActivity : AppCompatActivity() {
         val answer = intent.getStringExtra("answer")
         val key = intent.getStringExtra("key") ?: "Empty"
 
-        val sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        // Get current user email
+        sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         val userEmail = sharedPreferences.getString("USER_EMAIL", "")
 
-        val database = Firebase.database
+        database = Firebase.database
         flashcardRef = database.getReference("Users/$userEmail/Categories/$category/$key/")
 
         val questionHolder: EditText = findViewById(R.id.et_question)

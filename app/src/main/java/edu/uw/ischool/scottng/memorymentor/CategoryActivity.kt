@@ -16,6 +16,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 
@@ -24,6 +25,7 @@ class CategoryActivity : AppCompatActivity() {
     private lateinit var addCategoryBtn: Button
     private lateinit var auth: FirebaseAuth
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var database: FirebaseDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,15 +37,20 @@ class CategoryActivity : AppCompatActivity() {
             finish()
         }
 
-        // get current user email
+        // Get current user email
         sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
         val userEmail = sharedPreferences.getString("USER_EMAIL", "")
 
-        val database = Firebase.database
+        // Set up the toolbar
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
+        // Get firebase database ref
+        database = Firebase.database
         val userRef = database.getReference("Users/$userEmail/")
         val categoryRef = database.getReference("Users/$userEmail/Categories/")
 
-        // get list of Category objects
+        // Get list of Category objects
         var categoryNames = mutableListOf<String>()
         userRef.child("Categories").addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -51,7 +58,7 @@ class CategoryActivity : AppCompatActivity() {
                 for (categorySnap in snapshot.children) {
                     categorySnap.key?.let { categoryNames.add(it) }
                 }
-                // set recycler view
+                // set recycler view for list of categories
                 val recyclerView : RecyclerView = findViewById(R.id.recyclerView)
                 val adaptor = CategoryAdapter(categoryNames)
                 recyclerView.layoutManager = GridLayoutManager(this@CategoryActivity, 2)
@@ -72,10 +79,6 @@ class CategoryActivity : AppCompatActivity() {
             }
         })
 
-        // Set up the toolbar
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar)
-
         addCategoryEt = findViewById(R.id.et_add_category)
         addCategoryBtn = findViewById(R.id.btn_add_category)
 
@@ -95,7 +98,6 @@ class CategoryActivity : AppCompatActivity() {
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.btn_to_category -> {
-                    // If we're already on MainActivity, we don't need to do anything
                     true
                 }
                 R.id.calendarButton -> {
@@ -104,7 +106,6 @@ class CategoryActivity : AppCompatActivity() {
                     true
                 }
                 R.id.profile -> {
-                    // Start the profile activity, change ProfileActivity::class.java to your actual profile activity
                     val intent = Intent(this, ProfileActivity::class.java)
                     startActivity(intent)
                     true
