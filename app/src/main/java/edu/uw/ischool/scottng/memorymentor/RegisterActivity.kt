@@ -1,5 +1,6 @@
 package edu.uw.ischool.scottng.memorymentor
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -7,7 +8,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.database
 
@@ -40,6 +40,8 @@ class RegisterActivity : AppCompatActivity() {
                         if (task.isSuccessful) {
                             addUserToDb(email)
                             Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show()
+                            val intent = Intent(this, CategoryActivity::class.java)
+                            startActivity(intent)
                         } else {
                             Toast.makeText(this, "Registration failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                         }
