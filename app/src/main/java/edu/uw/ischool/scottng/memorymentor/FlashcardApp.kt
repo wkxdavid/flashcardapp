@@ -1,7 +1,6 @@
 package edu.uw.ischool.scottng.memorymentor
 
 import android.app.Application
-import android.nfc.Tag
 import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -46,12 +45,12 @@ class CategoryRepository : ICategoryRepository {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.w("Erroe", "Failed to read value.", error.toException())
+                Log.w("Error", "Failed to read value.", error.toException())
             }
 
         })
 
-        return categories;
+        return categories
     }
 }
 

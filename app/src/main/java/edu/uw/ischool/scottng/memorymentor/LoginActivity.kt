@@ -56,7 +56,7 @@ class LoginActivity : AppCompatActivity() {
                     startActivity(intent)
                     finish()
                 } else {
-                    Toast.makeText(baseContext, "Login failed.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(baseContext, "Incorrect email or password!", Toast.LENGTH_SHORT).show()
                 }
             }
     }
